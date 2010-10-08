@@ -13,4 +13,8 @@ public class EmpleadosDelegate {
      public Empleado obtenerEmpleadoPorCodigo(String codigo) throws SQLException {
           return new EmpleadosDAO().obtenerEmpleadoPorCodigo(codigo);
      }
+
+     public void registrarHora(int idEmpleado, int idStatus) throws SQLException {
+          new EmpleadosDAO().registrarHora(idEmpleado, idStatus);
+     }
 }

@@ -26,6 +26,11 @@
         scope="request" validate="false"
         parameter="method" />
 
+        <action path="/status"
+        type="mx.gob.conocer.checador.struts.action.StatusAction"
+        scope="request" validate="false"
+        parameter="method" />
+
         <action path="/login"
         type="mx.gob.conocer.checador.struts.action.LoginAction"
         scope="request" validate="false"

@@ -33,7 +33,6 @@ public class Conexion {
         Config objConfig = new Config();
         String path = new getPath<Conexion>(Conexion.class).ver();
         path = path + File.separator + "jdbc.properties";
-        System.out.println(path);
         objConfig.loadFile(path);
         //strDriver = objConfig.getProperty("driverType");
         strsqlservername = objConfig.getProperty("sqlservername");

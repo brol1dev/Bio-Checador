@@ -14,6 +14,7 @@ import mx.gob.conocer.checador.util.Conexion;
 public class EmpleadosDAO {
 
      private final static String SP_OBTENER_EMPLEADO_CODIGO = "{ call SpObtenerEmpleadoPorCodigo(?) }";
+     private final static String SP_REGISTRAR_HORA = "{ call SpRegistrarHora(?, ?) }";
      private Conexion conexion;
      private Connection conn;
      private CallableStatement proc;
@@ -40,6 +41,16 @@ public class EmpleadosDAO {
           conexion.cierraConexion(conn);
 
           return empleado;
+     }
 
+     public void registrarHora(int idEmpleado, int idStatus) throws SQLException {
+
+          conexion = new Conexion();
+          conn = conexion.AbreConexion();
+          proc = conn.prepareCall(SP_REGISTRAR_HORA);
+          proc.setInt("idEmpleado", idEmpleado);
+          proc.setInt("idStatus", idStatus);
+          proc.execute();
+          conexion.cierraConexion(conn);
      }
 }

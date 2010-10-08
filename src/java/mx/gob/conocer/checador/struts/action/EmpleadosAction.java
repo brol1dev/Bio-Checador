@@ -18,7 +18,6 @@ import org.apache.struts.actions.DispatchAction;
  */
 public class EmpleadosAction extends DispatchAction {
 
-
      public ActionForward obtenerEmpleado(ActionMapping mapping,
              ActionForm form,
              HttpServletRequest request,
@@ -30,20 +29,54 @@ public class EmpleadosAction extends DispatchAction {
           
           HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
           Writer out = responseWrapper.getWriter();
+          String jsonResponse = "{success:true, ";
 
           try {
                empleado = new EmpleadosDelegate().obtenerEmpleadoPorCodigo(codigo);
                if (empleado != null) {
-                    out.write("{success:true, empleado:{id:'" + empleado.getNombre() + "'}}");
+                    jsonResponse += "empleado:{id:'" + empleado.getIdRegistro() + "', ";
+                    jsonResponse += "codigo:'" + empleado.getCodigo() + "', ";
+                    jsonResponse += "nombre:'" + empleado.getNombre() + "', ";
+                    jsonResponse += "numero:'" + empleado.getNumEmpleado() + "', ";
+                    jsonResponse += "rfc:'" + empleado.getRfc() + "', ";
+                    jsonResponse += "area:'" + empleado.getArea() + "'}}";
                } else {
                     throw new NullPointerException("Empleado inexistente. Intentelo de nuevo.");
                }
           } catch (NullPointerException ex) {
-               System.out.println(ex.getMessage());
-               out.write("{success:true, empleado:{id:'" + ex.getMessage() + "'}}");
+               jsonResponse += "empleado:{error:'" + ex.getMessage() + "'}}";
           } catch (SQLException ex) {
-               System.out.println("Error en conexión con base de datos: " + ex.getMessage());
+               jsonResponse += "empleado:{error:'Error en conexión con base de datos. Intentelo de nuevo más tarde.'}}";
           } finally {
+               out.write(jsonResponse);
+               out.close();
+          }
+
+          return null;
+     }
+
+     public ActionForward registrarHora(ActionMapping mapping,
+             ActionForm form,
+             HttpServletRequest request,
+             HttpServletResponse response)
+             throws Exception {
+
+          int idEmpleado = Integer.parseInt(request.getParameter("idEmpleado"));
+          int idStatus = Integer.parseInt(request.getParameter("idStatus"));
+
+          HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+          Writer out = responseWrapper.getWriter();
+          String jsonResponse = null;
+
+          try {
+               new EmpleadosDelegate().registrarHora(idEmpleado, idStatus);
+               String exito = "Registro realizado!";
+               jsonResponse = "{success: true, respuesta: '" + exito + "'}";
+          } catch(SQLException ex) {
+               //TODO: Registro fallido. ERROR SQL
+               ex.getStackTrace();
+          } finally {
+               out.write(jsonResponse);
                out.close();
           }
 

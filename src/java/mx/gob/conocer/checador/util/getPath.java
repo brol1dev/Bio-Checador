@@ -31,7 +31,7 @@ public class getPath<T> {
             path = path.substring(0, path.lastIndexOf("/"));
             path = path.replace("/", "\\");
             path = path.replace("%20", " ");
-            System.out.println(" *** PATH PARA WINDOWS" + path);
+            //System.out.println(" *** PATH PARA WINDOWS" + path);
         } else if (File.separator.equals("/")) {
             a = "/" + clas.getName();
             a = a.replace(".", "/");
@@ -39,9 +39,9 @@ public class getPath<T> {
             URL url = clas.getResource(a);
 
             path=  url.getPath();
-            System.out.println(path);
-            System.out.println(System.getProperty("file.separator"));
-            System.out.println(File.separator);
+            //System.out.println(path);
+            //System.out.println(System.getProperty("file.separator"));
+            //System.out.println(File.separator);
 
             path = path.substring(0, path.lastIndexOf("/"));
             path = path.replaceAll("%20", "/");
