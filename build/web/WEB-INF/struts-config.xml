@@ -7,7 +7,7 @@
 
 <struts-config>
     <form-beans>
-    
+          <form-bean name="loginForm" type="mx.gob.conocer.checador.struts.form" />
     </form-beans>
     
     <global-exceptions>
@@ -16,10 +16,12 @@
 
     <global-forwards>
         <forward name="index"  path="/index.do" />
+        <forward name="login"  path="/login.do" />
     </global-forwards>
 
     <action-mappings>
-        <action path="/index" forward="/jsp/index.jsp" />
+         <action path="/login" forward="/jsp/login.jsp" />
+        <action path="/index" forward="/jsp/main.jsp" />
         
         <action path="/empleados"
         type="mx.gob.conocer.checador.struts.action.EmpleadosAction"
@@ -31,10 +33,11 @@
         scope="request" validate="false"
         parameter="method" />
 
-        <action path="/login"
+        <!--action path="/loginx"
         type="mx.gob.conocer.checador.struts.action.LoginAction"
-        scope="request" validate="false"
-        forward="/jsp/main.jsp" />
+        name="loginForm">
+             <forward name="success" path="/jsp/main.jsp" />
+         </action-->
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

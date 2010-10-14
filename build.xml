@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="checador-struts" default="default" basedir=".">
-    <description>Builds, tests, and runs the project checador-struts.</description>
+<project name="bio-checador" default="default" basedir=".">
+    <description>Builds, tests, and runs the project bio-checador.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 

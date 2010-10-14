@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+  xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/security
+          http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
+
+          <!--global-method-security /-->
+
+          <http auto-config='true'>
+               <intercept-url pattern="/login.do*" filters="none" />
+               <intercept-url pattern="/css/**" filters="none" />
+               <intercept-url pattern="/**" access="ROLE_USER" />
+               <form-login login-page="/login.do"
+               default-target-url="/index.do" always-use-default-target="true" />
+          </http>
+
+          <!--http auto-config="false" entry-point-ref="loginUrlAuthenticationEntryPoint">
+               <custom-filter position="FORM_LOGIN_FILTER" ref="procesoAutenticacionFilter" />
+               <intercept-url pattern="/jsp/index.jsp" filters="none" />
+               <intercept-url pattern="/*.do" access="ROLE_USER, ROLE_ADMIN" />
+          </http>
+
+          <beans:bean id="loginUrlAuthenticationEntryPoint"
+          class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+               <beans:property name="loginFormUrl" value="/jsp/index.jsp" />
+               <beans:property name="forceHttps" value="false" />
+          </beans:bean>
+
+          <beans:bean id="procesoAutenticacionFilter"
+          class="mx.gob.conocer.checador.security.ProcesoAutenticacionFilter">
+               <beans:property name="authenticationSuccessHandler" ref="successHandler" />
+               <beans:property name="authenticationManager" ref="authenticationManager" />
+          </beans:bean>
+
+          <beans:bean id="successHandler"
+          class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+               <beans:property name="defaultTargetUrl" value="/jsp/main.jsp" />
+          </beans:bean-->
+
+          <authentication-manager alias="authenticationManager">
+               <authentication-provider>
+                         <jdbc-user-service data-source-ref="dataSource" />
+                         <!--user-service>
+                              <user name="eric" password="eric" authorities="ROLE_USER" />
+                              <user name="admin" password="admin" authorities="ROLE_USER, ROLE_ADMIN" />
+                         </user-service-->
+               </authentication-provider>
+          </authentication-manager>
+
+          <!--bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="/WEB-INF/jdbc.properties" /-->
+
+          <beans:bean id="dataSource" 
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+               <beans:property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+               <beans:property name="url" value="jdbc:sqlserver://172.16.0.201:1433;databaseName=ASISTENCIA" />
+               <beans:property name="username" value="registro" />
+               <beans:property name="password" value="M9h3s$L1" />
+          </beans:bean>
+
+          <!--beans:bean id="userDetailsService"
+          class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+               <beans:property name="dataSource" ref="dataSource" />
+          </beans:bean-->
+</beans:beans>

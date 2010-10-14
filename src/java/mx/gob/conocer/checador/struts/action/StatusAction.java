@@ -19,7 +19,7 @@ import org.apache.struts.actions.DispatchAction;
  */
 public class StatusAction extends DispatchAction {
 
-     public ActionForward obtenerStatus(ActionMapping mapping,
+     public ActionForward obtenerStatusParaCombo(ActionMapping mapping,
              ActionForm form,
              HttpServletRequest request,
              HttpServletResponse response)
@@ -53,6 +53,48 @@ public class StatusAction extends DispatchAction {
                out.close();
           }
           
+          return null;
+     }
+
+     public ActionForward obtenerStatusParaRadio(ActionMapping mapping,
+             ActionForm form,
+             HttpServletRequest request,
+             HttpServletResponse response)
+             throws Exception {
+
+          HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+          Writer out = responseWrapper.getWriter();
+          List<Status> listStatus = null;
+          String jsonResponse = null;
+
+          try {
+               listStatus = new StatusDelegate().obtenerStatus();
+               int index = 1;
+               jsonResponse = "{xtype: 'radiogroup', id: 'rbgRazones', horizontal: true, columns: 2, width: 380, items: [";
+               for (Status status : listStatus) {
+                    jsonResponse += "{boxLabel:'" + status.getStatus() + "', name:'radios', ";
+                    if (status.getId() == 1) {
+                         jsonResponse += "checked: true, ";
+                    }
+                    jsonResponse += "inputValue: '" + status.getId() + "'}";
+
+                    if (index != listStatus.size()) {
+                         jsonResponse += ",";
+                    }
+                    ++index;
+               }
+               jsonResponse += "]}";
+          } catch (NullPointerException ex) {
+               //TODO: Excepcion si la lista esta vacia
+          } catch (SQLException ex) {
+               //TODO: Excepcion si hay error en SQL
+          } finally {
+               out.write(jsonResponse);
+               out.close();
+          }
+
+          out.write(jsonResponse);
+          out.close();
           return null;
      }
 }

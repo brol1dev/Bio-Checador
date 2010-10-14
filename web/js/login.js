@@ -3,17 +3,15 @@ Ext.onReady(function(){
 
     var login = new Ext.FormPanel({
         labelWidth:80,
-        url:'login.do',
+        url:'j_spring_security_check',
         frame:true,
         title:'Ingreso al sistema',
         defaultType:'textfield',
-        //width:300,
-        //height:150,
         monitorValid:true,
 	// El atributo 'name' define el nombre de variable que se enviará al servidor
         items:[{
                 fieldLabel:'Usuario',
-                name:'j_username',
+                name:'j_usuario',
                 allowBlank:false
             },{
                 fieldLabel:'Contraseña',
@@ -26,10 +24,8 @@ Ext.onReady(function(){
                 formBind: true,
                 // Se lanza esta función cuando se da clic al botón
                 handler:function(){
-                     window.location = 'login.do';
-                    //login.getForm().submit({
-                        /*
-                        method:'POST',
+                     //window.location = 'login.do';
+                    login.getForm().submit({
 
                          // Functions that fire (success or failure) when the server responds. The server would
                          // actually respond with valid JSON,
@@ -40,11 +36,7 @@ Ext.onReady(function(){
                          // and when they click "OK", they are redirected to whatever page
                          // you define as redirect.
                         success:function() {
-                        	Ext.Msg.alert('Status', 'Ingreso satisfactorio!', function(btn, text){
-				   if (btn == 'ok'){
-		                        window.location = 'main.action';
-                                   }
-                              });
+                             window.location = 'index.do';
                         },
 
 			// Failure function, see comment above re: success and failure.
@@ -56,11 +48,11 @@ Ext.onReady(function(){
                                 obj = Ext.util.JSON.decode(action.response.responseText);
                                 Ext.Msg.alert('Ingreso fallido!', obj.errors.reason);
                             }else{
-                                Ext.Msg.alert('Alerta!', 'El servidor es inalcanzable : ' + action.response.responseText);
+                                Ext.Msg.alert('Alerta!', 'El servidor es inalcanzable. Comuniquese con el administrador.');
                             }
                             login.getForm().reset();
-                        }*/
-                    //});
+                        }
+                    });
                 }
             }]
     });
@@ -71,6 +63,7 @@ Ext.onReady(function(){
         height:150,
         closable: false,
         resizable: false,
+        draggable: false,
         plain: true,
         border: false,
         items: [login]

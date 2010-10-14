@@ -1,8 +1,9 @@
 package mx.gob.conocer.checador.delegate;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.Map;
 import mx.gob.conocer.checador.dao.EmpleadosDAO;
-import mx.gob.conocer.checador.model.Empleado;
 
 /**
  *
@@ -10,11 +11,11 @@ import mx.gob.conocer.checador.model.Empleado;
  */
 public class EmpleadosDelegate {
 
-     public Empleado obtenerEmpleadoPorCodigo(String codigo) throws SQLException {
-          return new EmpleadosDAO().obtenerEmpleadoPorCodigo(codigo);
+     public Map<String, Object> obtenerEmpleadoPorCodigo(String codigo, int status) throws SQLException {
+          return new EmpleadosDAO().obtenerEmpleadoPorCodigo(codigo, status);
      }
 
-     public void registrarHora(int idEmpleado, int idStatus) throws SQLException {
-          new EmpleadosDAO().registrarHora(idEmpleado, idStatus);
+     public Map<String, Object> registrarHora(int idEmpleado, int idStatus) throws SQLException {
+          return new EmpleadosDAO().registrarHora(idEmpleado, idStatus);
      }
 }

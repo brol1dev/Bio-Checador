@@ -5,7 +5,8 @@ Ext.onReady(function() {
           id: 'id',
           fieldLabel: 'Código',
           name: 'id',
-          allowBlank: true
+          allowBlank: true,
+          style: 'margin-bottom: 10px'
      });
 
      var pnlRegistro = new Ext.FormPanel({
@@ -16,19 +17,33 @@ Ext.onReady(function() {
           bodyStyle: 'padding: 10px 5px',
           frame: true,
           defaults: {
-               width: 285
+               width: 315
           },
-          items: [txtID],
+          items: [txtID, {
+               xtype: 'fieldset',
+               title: 'Razón de Registro',
+               bodyStyle: 'margin-left: -15px',
+               width: 365,
+               defaults: {
+                    anchor: '1'
+               },
+               plugins: new Ext.ux.Plugin.LiteRemoteComponent({
+                    url: 'status.do?method=obtenerStatusParaRadio'
+               })
+               //items: [rbgRazones] // Se llenan los items desde el StatusAction.java
+          }],
           buttonAlign: 'center',
           buttons: [{
                text: 'Buscar',
                style: 'margin-bottom:5px',
                handler: function() {
+                    var status = Ext.getCmp('rbgRazones').getValue().getRawValue();
                     Ext.Ajax.request({
                     url: 'empleados.do?method=obtenerEmpleado',
                     method: 'POST',
                     params: {
-                        codigo: txtID.getValue()
+                        codigo: txtID.getValue(),
+                        razon: status
                     },
                     success: function(result, request) {
                          var jsonData = Ext.util.JSON.decode(result.responseText);
@@ -37,7 +52,6 @@ Ext.onReady(function() {
                               mostrarYLlenarRegistro(empleado);
                          } else {
                               Ext.Msg.alert('Error', empleado.error);
-                              txtID.reset();
                          }
                     },
                     failure: function(result, request) {
@@ -50,10 +64,11 @@ Ext.onReady(function() {
 
      var winRegistro = new Ext.Window({
         layout:'fit',
-        width:370,
-        height:140,
+        width:400,
+        height:230,
         closable: false,
         resizable: false,
+        draggable: false,
         plain: true,
         border: false,
         items: [pnlRegistro]
@@ -97,8 +112,14 @@ Ext.onReady(function() {
           disabled: true,
           disabledClass: 'disabled-txt'
      });
+     var txtStatus = new Ext.form.TextField({
+          name: 'status',
+          disabled: true,
+          hidden: true,
+          disabledClass: 'disabled-txt'
+     });
 
-     var strStatus = new Ext.data.JsonStore({
+     /*var strStatus = new Ext.data.JsonStore({
           url: 'status.do?method=obtenerStatus',
           idProperty: 'id',
           root: 'registros',
@@ -128,28 +149,36 @@ Ext.onReady(function() {
                     }
                }
           }
-     });
+     });*/
 
      var btnRegistrar = new Ext.Button({
           text: 'Registrar Hora',
           width: 100,
-          disabled: true,
+          style: 'margin-bottom: 5px',
           handler: function() {
                Ext.Ajax.request({
                     url: 'empleados.do?method=registrarHora',
                     method: 'POST',
                     params: {
                         idEmpleado: txtIdEmpleado.getValue(),
-                        idStatus: cbxStatus.getValue()
+                        idStatus: txtStatus.getValue()
                     },
                     success: function(result, request) {
                          var jsonData = Ext.util.JSON.decode(result.responseText);
-                         var respuesta = jsonData.respuesta;
-                         Ext.Msg.alert('Registro Exitoso', respuesta, function(btn, text) {
-                              if (btn == 'ok') {
+                         if (jsonData.error == null) {
+                              var respuesta = jsonData.respuesta;
+                              setTimeout(function() {
+                                   msgExito.hide();
                                    mostrarPanelCodigo();
-                              }
-                         });
+                              }, 5000);
+                              var msgExito = Ext.Msg.alert('Registro Exitoso', respuesta, function(btn, text) {
+                                   mostrarPanelCodigo();
+                              });
+                         } else {
+                              Ext.Msg.alert('Registro Duplicado', jsonData.error, function(btn, text) {
+                                   mostrarPanelCodigoSinReset();
+                              });
+                         }
                     },
                     failure: function(result, request) {
                          Ext.Msg.alert('Error', 'El servidor es inalcanzable. Ponganse en contacto con el administrador.');
@@ -161,6 +190,7 @@ Ext.onReady(function() {
      var pnlInformacion = new Ext.Panel({
           title: 'Datos del Empleado',
           layout: 'form',
+          //width: 700,
           hidden: true,  // inicia escondido pero aparece al buscar un empleado
           defaultType: 'textfield',
           labelWidth: 130,
@@ -170,10 +200,11 @@ Ext.onReady(function() {
           defaults: {
                width: 285
           },
-          items: [txtNombre, txtNumEmpleado, txtRfc, txtCodigo, txtArea, cbxStatus],
-          buttonAlign: 'center',
+          items: [txtNombre, txtNumEmpleado, txtRfc, txtCodigo, txtArea],
+          buttonAlign: 'right',
           buttons: [btnRegistrar, {
                text: 'Cancelar',
+               style: 'margin-bottom: 5px',
                width: 100,
                handler: function() {
                     mostrarPanelCodigo();
@@ -183,7 +214,6 @@ Ext.onReady(function() {
      pnlInformacion.render('panel');
 
      function mostrarYLlenarRegistro(empleado) {
-          cbxStatus.store.load();
           winRegistro.hide();
           pnlInformacion.show();
           txtNombre.setValue(empleado.nombre);
@@ -192,12 +222,18 @@ Ext.onReady(function() {
           txtCodigo.setValue(empleado.codigo);
           txtArea.setValue(empleado.area);
           txtIdEmpleado.setValue(empleado.id);
+          txtStatus.setValue(empleado.razon);
      }
 
      function mostrarPanelCodigo() {
           pnlInformacion.hide();
           winRegistro.show();
           txtID.reset();
+     }
+
+     function mostrarPanelCodigoSinReset() {
+          pnlInformacion.hide();
+          winRegistro.show();
      }
 });
 
