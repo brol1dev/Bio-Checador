@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import mx.gob.conocer.checador.delegate.EmpleadosDelegate;
+import mx.gob.conocer.checador.delegate.StatusDelegate;
 import mx.gob.conocer.checador.model.Empleado;
+import mx.gob.conocer.checador.model.Status;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -40,13 +42,15 @@ public class EmpleadosAction extends DispatchAction {
                int usoStatus = (Integer) resultado.get("usoStatus");
                if (usoStatus >= 0) {
                     if (empleado != null) {
+                         Status status = obtenerStatusPorID(razon);
                          jsonResponse += "empleado:{id:'" + empleado.getIdRegistro() + "', ";
                          jsonResponse += "codigo:'" + empleado.getCodigo() + "', ";
                          jsonResponse += "nombre:'" + empleado.getNombre() + "', ";
                          jsonResponse += "numero:'" + empleado.getNumEmpleado() + "', ";
                          jsonResponse += "rfc:'" + empleado.getRfc() + "', ";
                          jsonResponse += "area:'" + empleado.getArea() + "', ";
-                         jsonResponse += "razon:'" + razon + "'}} ";
+                         jsonResponse += "status:'" + status.getStatus() + "', ";
+                         jsonResponse += "idStatus:'" + status.getId() + "'}} ";
                     } else {
                          throw new NullPointerException("Empleado inexistente. Intentelo de nuevo.");
                     }
@@ -78,13 +82,14 @@ public class EmpleadosAction extends DispatchAction {
 
           int idEmpleado = Integer.parseInt(request.getParameter("idEmpleado"));
           int idStatus = Integer.parseInt(request.getParameter("idStatus"));
+          String comentario = request.getParameter("comentario");
 
           HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
           Writer out = responseWrapper.getWriter();
           String jsonResponse = null;
 
           try {
-               Map resultado = new EmpleadosDelegate().registrarHora(idEmpleado, idStatus);
+               Map resultado = new EmpleadosDelegate().registrarHora(idEmpleado, idStatus, comentario);
                Date date = (Date) resultado.get("fechaActual");
                int usoStatus = (Integer) resultado.get("usoStatus");
                if (usoStatus > 0) {
@@ -101,7 +106,7 @@ public class EmpleadosAction extends DispatchAction {
                }
           } catch(SQLException ex) {
                //TODO: Registro fallido. ERROR SQL
-               ex.printStackTrace();
+               //ex.printStackTrace();
           } finally {
                out.write(jsonResponse);
                out.close();
@@ -116,11 +121,17 @@ public class EmpleadosAction extends DispatchAction {
                case -1:
                     msg = "El empleado solicitado no ha hecho su registro de entrada el día de hoy.";
                     break;
+               case -2:
+                    msg = "El empleado solicitado ya ha registrado su salida. No puede hacer más registros para esta persona el día de hoy.";
+                    break;
                case -3:
                     msg = "El empleado solicitado no ha hecho su registro de salida a comer el día de hoy.";
                     break;
           }
           return msg;
+     }
 
+     private Status obtenerStatusPorID(int idStatus) throws SQLException {
+          return new StatusDelegate().obtenerStatusPorId(idStatus);
      }
 }

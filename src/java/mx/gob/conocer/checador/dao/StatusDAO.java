@@ -16,6 +16,7 @@ import mx.gob.conocer.checador.util.Conexion;
 public class StatusDAO {
 
      private final static String SP_OBTENER_STATUS = "{ call SpObtenerStatus() }";
+     private final static String SP_OBTENER_STATUS_ID = "{ call PaObtenerStatusPorId(?) }";
      private Conexion conexion;
      private Connection conn;
      private CallableStatement proc;
@@ -38,5 +39,22 @@ public class StatusDAO {
           conexion.cierraConexion(conn);
 
           return listStatus;
+     }
+
+     public Status obtenerStatusPorID(int idStatus) throws SQLException {
+
+          conexion = new Conexion();
+          conn = conexion.AbreConexion();
+          proc = conn.prepareCall(SP_OBTENER_STATUS_ID);
+          proc.setInt("idStatus", idStatus);
+
+          ResultSet rs = proc.executeQuery();
+          Status status = null;
+          while (rs.next()) {
+               status = new Status();
+               status.setId(rs.getInt(1));
+               status.setStatus(rs.getString(2));
+          }
+          return status;
      }
 }

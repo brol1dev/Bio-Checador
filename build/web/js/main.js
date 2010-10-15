@@ -13,17 +13,19 @@ Ext.onReady(function() {
           title: 'Ingrese el código del empleado',
           url: 'empleados.do?method=obtenerEmpleado',
           defaultType: 'textfield',
+          width: 410,
+          height: 230,
           labelWidth: 45,
           bodyStyle: 'padding: 10px 5px',
           frame: true,
           defaults: {
-               width: 315
+               width: 335
           },
           items: [txtID, {
                xtype: 'fieldset',
                title: 'Razón de Registro',
                bodyStyle: 'margin-left: -15px',
-               width: 365,
+               width: 385,
                defaults: {
                     anchor: '1'
                },
@@ -37,7 +39,7 @@ Ext.onReady(function() {
                text: 'Buscar',
                style: 'margin-bottom:5px',
                handler: function() {
-                    var status = Ext.getCmp('rbgRazones').getValue().getRawValue();
+                    var status = Ext.getCmp('rbgRazones').getValue().getGroupValue();
                     Ext.Ajax.request({
                     url: 'empleados.do?method=obtenerEmpleado',
                     method: 'POST',
@@ -61,10 +63,11 @@ Ext.onReady(function() {
                }
           }]
      });
+     pnlRegistro.render('panelCodigo');
 
-     var winRegistro = new Ext.Window({
+     /*var winRegistro = new Ext.Window({
         layout:'fit',
-        width:400,
+        width:420,
         height:230,
         closable: false,
         resizable: false,
@@ -73,7 +76,7 @@ Ext.onReady(function() {
         border: false,
         items: [pnlRegistro]
      });
-     winRegistro.show();
+     winRegistro.show();*/
 
      var txtNombre = new Ext.form.TextField({
           fieldLabel: 'Nombre',
@@ -118,6 +121,13 @@ Ext.onReady(function() {
           hidden: true,
           disabledClass: 'disabled-txt'
      });
+     var txaComentario = new Ext.form.TextArea({
+          fieldLabel: 'Observaciones',
+          name: 'comentario',
+          maxLength: 200,
+          grow: true,
+          autoCreate: {tag: 'textarea', maxlength: '200'}
+     });
 
      /*var strStatus = new Ext.data.JsonStore({
           url: 'status.do?method=obtenerStatus',
@@ -161,7 +171,8 @@ Ext.onReady(function() {
                     method: 'POST',
                     params: {
                         idEmpleado: txtIdEmpleado.getValue(),
-                        idStatus: txtStatus.getValue()
+                        idStatus: txtStatus.getValue(),
+                        comentario: txaComentario.getValue()
                     },
                     success: function(result, request) {
                          var jsonData = Ext.util.JSON.decode(result.responseText);
@@ -200,7 +211,7 @@ Ext.onReady(function() {
           defaults: {
                width: 285
           },
-          items: [txtNombre, txtNumEmpleado, txtRfc, txtCodigo, txtArea],
+          items: [txtNombre, txtNumEmpleado, txtRfc, txtCodigo, txtArea, txaComentario],
           buttonAlign: 'right',
           buttons: [btnRegistrar, {
                text: 'Cancelar',
@@ -214,7 +225,8 @@ Ext.onReady(function() {
      pnlInformacion.render('panel');
 
      function mostrarYLlenarRegistro(empleado) {
-          winRegistro.hide();
+          pnlRegistro.hide();
+          pnlInformacion.setTitle("Registro de " + empleado.status);
           pnlInformacion.show();
           txtNombre.setValue(empleado.nombre);
           txtNumEmpleado.setValue(empleado.numero);
@@ -222,18 +234,20 @@ Ext.onReady(function() {
           txtCodigo.setValue(empleado.codigo);
           txtArea.setValue(empleado.area);
           txtIdEmpleado.setValue(empleado.id);
-          txtStatus.setValue(empleado.razon);
+          txtStatus.setValue(empleado.idStatus);
      }
 
      function mostrarPanelCodigo() {
           pnlInformacion.hide();
-          winRegistro.show();
+          pnlRegistro.show();
           txtID.reset();
+          txaComentario.reset();
      }
 
      function mostrarPanelCodigoSinReset() {
           pnlInformacion.hide();
-          winRegistro.show();
+          pnlRegistro.show();
+          txaComentario.reset();
      }
 });
 

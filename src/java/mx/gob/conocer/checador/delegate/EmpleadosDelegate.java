@@ -15,7 +15,7 @@ public class EmpleadosDelegate {
           return new EmpleadosDAO().obtenerEmpleadoPorCodigo(codigo, status);
      }
 
-     public Map<String, Object> registrarHora(int idEmpleado, int idStatus) throws SQLException {
-          return new EmpleadosDAO().registrarHora(idEmpleado, idStatus);
+     public Map<String, Object> registrarHora(int idEmpleado, int idStatus, String comentario) throws SQLException {
+          return new EmpleadosDAO().registrarHora(idEmpleado, idStatus, comentario);
      }
 }

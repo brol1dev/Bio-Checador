@@ -21,6 +21,7 @@
         <title>Bio-Checador</title>
     </head>
     <body>
+        <div id="panelCodigo"></div>
         <div id="panel"></div>
         <div id="footer">
              <p>

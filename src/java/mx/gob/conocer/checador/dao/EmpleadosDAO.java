@@ -17,7 +17,7 @@ import mx.gob.conocer.checador.util.Conexion;
 public class EmpleadosDAO {
 
      private final static String SP_OBTENER_EMPLEADO_CODIGO = "{ call SpObtenerEmpleadoPorCodigo(?, ?, ?) }";
-     private final static String SP_REGISTRAR_HORA = "{ call SpRegistrarHora(?, ?, ?, ?) }";
+     private final static String SP_REGISTRAR_HORA = "{ call SpRegistrarHora(?, ?, ?, ?, ?) }";
      private Conexion conexion;
      private Connection conn;
      private CallableStatement proc;
@@ -51,20 +51,21 @@ public class EmpleadosDAO {
           return resultado;
      }
 
-     public Map<String, Object> registrarHora(int idEmpleado, int idStatus) throws SQLException {
+     public Map<String, Object> registrarHora(int idEmpleado, int idStatus, String comentario) throws SQLException {
 
           conexion = new Conexion();
           conn = conexion.AbreConexion();
           proc = conn.prepareCall(SP_REGISTRAR_HORA);
           proc.setInt("idEmpleado", idEmpleado);
           proc.setInt("idStatus", idStatus);
+          proc.setString("comentario", comentario);
           proc.registerOutParameter("fechaActual", java.sql.Types.TIMESTAMP);
           proc.registerOutParameter("usoStatus", java.sql.Types.BIGINT);
           proc.execute();
 
           Map<String, Object> resultado = new HashMap<String, Object>();
           Date date = proc.getTimestamp("fechaActual");
-          Integer usoStatus = proc.getInt(4);
+          Integer usoStatus = proc.getInt(5);
           resultado.put("fechaActual", date);
           resultado.put("usoStatus", usoStatus);
 

@@ -14,4 +14,8 @@ public class StatusDelegate {
      public List<Status> obtenerStatus() throws SQLException {
           return new StatusDAO().obtenerEstatus();
      }
+
+     public Status obtenerStatusPorId(int idStatus) throws SQLException {
+          return new StatusDAO().obtenerStatusPorID(idStatus);
+     }
 }

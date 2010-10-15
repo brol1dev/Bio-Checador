@@ -32,6 +32,11 @@
      margin: 20px auto 0px;
 }
 
+#panelCodigo {
+     width: 410px;
+     margin: 20px auto 0px;
+}
+
 .disabled-txt {
     color: #000;
 }
