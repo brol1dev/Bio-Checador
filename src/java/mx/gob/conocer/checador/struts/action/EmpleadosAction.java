@@ -40,20 +40,21 @@ public class EmpleadosAction extends DispatchAction {
                Map resultado = new EmpleadosDelegate().obtenerEmpleadoPorCodigo(codigo, razon);
                Empleado empleado = (Empleado) resultado.get("empleado");
                int usoStatus = (Integer) resultado.get("usoStatus");
+
+               if (empleado == null) {
+                    throw new NullPointerException("Empleado inexistente. Intentelo de nuevo.");
+               }
+
                if (usoStatus >= 0) {
-                    if (empleado != null) {
-                         Status status = obtenerStatusPorID(razon);
-                         jsonResponse += "empleado:{id:'" + empleado.getIdRegistro() + "', ";
-                         jsonResponse += "codigo:'" + empleado.getCodigo() + "', ";
-                         jsonResponse += "nombre:'" + empleado.getNombre() + "', ";
-                         jsonResponse += "numero:'" + empleado.getNumEmpleado() + "', ";
-                         jsonResponse += "rfc:'" + empleado.getRfc() + "', ";
-                         jsonResponse += "area:'" + empleado.getArea() + "', ";
-                         jsonResponse += "status:'" + status.getStatus() + "', ";
-                         jsonResponse += "idStatus:'" + status.getId() + "'}} ";
-                    } else {
-                         throw new NullPointerException("Empleado inexistente. Intentelo de nuevo.");
-                    }
+                    Status status = obtenerStatusPorID(razon);
+                    jsonResponse += "empleado:{id:'" + empleado.getIdRegistro() + "', ";
+                    jsonResponse += "codigo:'" + empleado.getCodigo() + "', ";
+                    jsonResponse += "nombre:'" + empleado.getNombre() + "', ";
+                    jsonResponse += "numero:'" + empleado.getNumEmpleado() + "', ";
+                    jsonResponse += "rfc:'" + empleado.getRfc() + "', ";
+                    jsonResponse += "area:'" + empleado.getArea() + "', ";
+                    jsonResponse += "status:'" + status.getStatus() + "', ";
+                    jsonResponse += "idStatus:'" + status.getId() + "'}} ";
                } else {
                     String errorStatus = obtenerMensajeStatus(usoStatus);
                     if (errorStatus == null) {
@@ -122,7 +123,7 @@ public class EmpleadosAction extends DispatchAction {
                     msg = "El empleado solicitado no ha hecho su registro de entrada el día de hoy.";
                     break;
                case -2:
-                    msg = "El empleado solicitado ya ha registrado su salida. No puede hacer más registros para esta persona el día de hoy.";
+                    msg = "El empleado solicitado ya salió el día de hoy. Esta persona no puede hacer más registros hoy.";
                     break;
                case -3:
                     msg = "El empleado solicitado no ha hecho su registro de salida a comer el día de hoy.";

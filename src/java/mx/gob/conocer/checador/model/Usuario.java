@@ -1,3 +1,7 @@
+/*
+ * Esta clase ya no se usa.
+ * Fue sustituida por Spring Security.
+ */
 package mx.gob.conocer.checador.model;
 
 /**

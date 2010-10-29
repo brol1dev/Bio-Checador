@@ -5,16 +5,33 @@
     Description:
         Estilos personalizados para aplicación del checador
 */
+ 
+#body-content {
+padding: 10px 10px 30px 10px;
+}
 
 #footer {
     position: fixed;
-    bottom: 5px;
+    background-color: #FFF;
     border-top: 1px solid #eee;
     width: 100%;
-    padding-top: 5px;
+    bottom: 0px;
+    height: 20px;
+    margin-top: 10px;
+    z-index: 1000;
 }
 
-#footer p {
+#footer-frame {
+     height: 20px;
+     margin: 0px 10px 0px 10px;
+     position: relative;
+}
+
+#footer-content {
+     padding: 3px 0px 0px 0px;
+}
+
+#footer-content p {
     width: 100%;
     color: #444;
     font-size: 0.75em;
@@ -29,12 +46,27 @@
 
 #panel {
      width: 700px;
-     margin: 20px auto 0px;
+     margin: 0px auto 0px;
 }
 
 #panelCodigo {
      width: 410px;
-     margin: 20px auto 0px;
+     margin: 0px auto 0px;
+}
+
+.codigo {
+     width: 410px;
+     margin: 0px auto 5px;
+}
+
+#panelReportes {
+     width: 800px;
+     margin: 0px auto 0px;
+}
+
+.reportes {
+     width: 800px;
+     margin: 0px auto 5px;
 }
 
 .disabled-txt {

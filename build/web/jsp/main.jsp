@@ -3,7 +3,7 @@
     Created on : 5/10/2010, 02:00:57 PM
     Author     : Ironbit
 --%>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
    "http://www.w3.org/TR/html4/loose.dtd">
@@ -18,15 +18,20 @@
         <script type="text/javascript" src="/bio-checador/ext-3.2.1/ext-all.js"></script>
         <script type="text/javascript" src="/bio-checador/ext-3.2.1/remoteComponent.js"></script>
         <script type="text/javascript" src="/bio-checador/js/main.js"></script>
+        <script type="text/javascript" src="/bio-checador/js/admin_nav.js"></script>
         <title>Bio-Checador</title>
     </head>
     <body>
-        <div id="panelCodigo"></div>
-        <div id="panel"></div>
-        <div id="footer">
-             <p>
-               Conocer | <a href="j_spring_security_logout">Cerrar Sesión</a>
-             </p>
-        </div>
+         <%@include file="/jsp/userinfo.jsp" %>
+
+         
+              <div id="body-content">
+                   <sec:authorize url="/admin">
+                        <div id="admin_nav" class="codigo"></div>
+                   </sec:authorize>
+                  <div id="panelCodigo"></div>
+                  <div id="panel"></div>
+              </div>
+        
     </body>
 </html>

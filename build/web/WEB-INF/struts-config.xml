@@ -20,9 +20,16 @@
     </global-forwards>
 
     <action-mappings>
-         <action path="/login" forward="/jsp/login.jsp" />
+        <action path="/login" forward="/jsp/login.jsp" />
         <action path="/index" forward="/jsp/main.jsp" />
+        <action path="/admin/reportes" forward="/jsp/admin/reportes.jsp" />
+        <action path="/restringido" forward="/jsp/restricted.jsp" />
         
+        <action path="/admin/obtenerReportes"
+        type="mx.gob.conocer.checador.struts.action.ReportesAction"
+        scope="request" validate="false"
+        parameter="method" />
+
         <action path="/empleados"
         type="mx.gob.conocer.checador.struts.action.EmpleadosAction"
         scope="request" validate="false"

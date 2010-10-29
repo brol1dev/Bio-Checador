@@ -5,7 +5,7 @@ Ext.onReady(function() {
           id: 'id',
           fieldLabel: 'Código',
           name: 'id',
-          allowBlank: true,
+          allowBlank: false,
           style: 'margin-bottom: 10px'
      });
 
@@ -39,27 +39,32 @@ Ext.onReady(function() {
                text: 'Buscar',
                style: 'margin-bottom:5px',
                handler: function() {
-                    var status = Ext.getCmp('rbgRazones').getValue().getGroupValue();
-                    Ext.Ajax.request({
-                    url: 'empleados.do?method=obtenerEmpleado',
-                    method: 'POST',
-                    params: {
-                        codigo: txtID.getValue(),
-                        razon: status
-                    },
-                    success: function(result, request) {
-                         var jsonData = Ext.util.JSON.decode(result.responseText);
-                         var empleado = jsonData.empleado;
-                         if (empleado.error == null) {
-                              mostrarYLlenarRegistro(empleado);
-                         } else {
-                              Ext.Msg.alert('Error', empleado.error);
+                    var codigo = txtID.getValue();
+                    if (codigo == '') {
+                         Ext.Msg.alert('Error', 'Ingrese un código de empleado para hacer un registro.');
+                    } else {
+                         var status = Ext.getCmp('rbgRazones').getValue().getGroupValue();
+                         Ext.Ajax.request({
+                         url: 'empleados.do?method=obtenerEmpleado',
+                         method: 'POST',
+                         params: {
+                             codigo: codigo,
+                             razon: status
+                         },
+                         success: function(result, request) {
+                              var jsonData = Ext.util.JSON.decode(result.responseText);
+                              var empleado = jsonData.empleado;
+                              if (empleado.error == null) {
+                                   mostrarYLlenarRegistro(empleado);
+                              } else {
+                                   Ext.Msg.alert('Error', empleado.error);
+                              }
+                         },
+                         failure: function(result, request) {
+                              Ext.Msg.alert('Error', 'El servidor es inalcanzable. Ponganse en contacto con el administrador.');
                          }
-                    },
-                    failure: function(result, request) {
-                         Ext.Msg.alert('Error', 'El servidor es inalcanzable. Ponganse en contacto con el administrador.');
+                         });
                     }
-                    });
                }
           }]
      });
@@ -128,38 +133,6 @@ Ext.onReady(function() {
           grow: true,
           autoCreate: {tag: 'textarea', maxlength: '200'}
      });
-
-     /*var strStatus = new Ext.data.JsonStore({
-          url: 'status.do?method=obtenerStatus',
-          idProperty: 'id',
-          root: 'registros',
-          totalProperty: 'total',
-          fields: ['id', 'status']
-     });
-
-     var cbxStatus = new Ext.form.ComboBox({
-          store: strStatus,
-          fieldLabel: 'Razón de Registro',
-          displayField: 'status',
-          valueField: 'id',
-          triggerAction: 'all',
-          mode: 'local',
-          typeAhead: true,
-          emptyText: 'Selecciona un Status...',
-          selectOnFocus: true,
-          listeners: {
-               'select': function (combo, value, index) {
-                    btnRegistrar.enable();
-               },
-               'blur': function(field) {
-                    if (field.getValue() == '') {
-                         btnRegistrar.disable();
-                    } else {
-                         btnRegistrar.enable();
-                    }
-               }
-          }
-     });*/
 
      var btnRegistrar = new Ext.Button({
           text: 'Registrar Hora',
@@ -249,5 +222,37 @@ Ext.onReady(function() {
           pnlRegistro.show();
           txaComentario.reset();
      }
+
+      /*var strStatus = new Ext.data.JsonStore({
+          url: 'status.do?method=obtenerStatus',
+          idProperty: 'id',
+          root: 'registros',
+          totalProperty: 'total',
+          fields: ['id', 'status']
+     });
+
+     var cbxStatus = new Ext.form.ComboBox({
+          store: strStatus,
+          fieldLabel: 'Razón de Registro',
+          displayField: 'status',
+          valueField: 'id',
+          triggerAction: 'all',
+          mode: 'local',
+          typeAhead: true,
+          emptyText: 'Selecciona un Status...',
+          selectOnFocus: true,
+          listeners: {
+               'select': function (combo, value, index) {
+                    btnRegistrar.enable();
+               },
+               'blur': function(field) {
+                    if (field.getValue() == '') {
+                         btnRegistrar.disable();
+                    } else {
+                         btnRegistrar.enable();
+                    }
+               }
+          }
+     });*/
 });
 
