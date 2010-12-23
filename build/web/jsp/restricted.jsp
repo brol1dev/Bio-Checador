@@ -14,6 +14,6 @@
     </head>
     <body>
          <p>No tienes acceso a la página solicitada</p>
-         <a href="/bio-checador/index.do">Regresar a Inicio</a>
+         <a href="/checador/index.do">Regresar a Inicio</a>
     </body>
 </html>

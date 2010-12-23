@@ -15,8 +15,8 @@
     </global-exceptions>
 
     <global-forwards>
-        <forward name="index"  path="/index.do" />
-        <forward name="login"  path="/login.do" />
+        <!--forward name="index"  path="/index.do" />
+        <forward name="login"  path="/login.do" /-->
     </global-forwards>
 
     <action-mappings>
@@ -40,11 +40,6 @@
         scope="request" validate="false"
         parameter="method" />
 
-        <!--action path="/loginx"
-        type="mx.gob.conocer.checador.struts.action.LoginAction"
-        name="loginForm">
-             <forward name="success" path="/jsp/main.jsp" />
-         </action-->
     </action-mappings>
     
     <controller processorClass="org.apache.struts.tiles.TilesRequestProcessor"/>

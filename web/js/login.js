@@ -1,3 +1,6 @@
+/*
+ * Por el momento esta clase no se usa.
+ */
 Ext.onReady(function(){
     Ext.QuickTips.init();
 
@@ -7,11 +10,12 @@ Ext.onReady(function(){
         frame:true,
         title:'Ingreso al sistema',
         defaultType:'textfield',
+        //standardSubmit: true,
         monitorValid:true,
 	// El atributo 'name' define el nombre de variable que se enviará al servidor
         items:[{
                 fieldLabel:'Usuario',
-                name:'j_usuario',
+                name:'j_username',
                 allowBlank:false
             },{
                 fieldLabel:'Contraseña',
@@ -21,10 +25,9 @@ Ext.onReady(function(){
             }],
         buttons:[{
                 text:'Entrar',
-                formBind: true,
+                //formBind: true,
                 // Se lanza esta función cuando se da clic al botón
                 handler:function(){
-                     //window.location = 'login.do';
                     login.getForm().submit({
 
                          // Functions that fire (success or failure) when the server responds. The server would

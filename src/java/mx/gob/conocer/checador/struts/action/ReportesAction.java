@@ -16,7 +16,6 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.actions.DispatchAction;
 import mx.gob.conocer.checador.delegate.ReportesDelegate;
 import mx.gob.conocer.checador.model.Reporte;
-import mx.gob.conocer.checador.reportes.ReportesBuilder;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.json.JSONObject;
 
@@ -40,7 +39,7 @@ public class ReportesAction extends DispatchAction {
                HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
                Writer out = responseWrapper.getWriter();
                JSONObject jsonResponse = null;
-               SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+               SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
                try {
                     Date fInicial = dateFormat.parse(fchInicial);
@@ -58,7 +57,67 @@ public class ReportesAction extends DispatchAction {
                return null;
           }
 
-          public ActionForward exportarRIndividualXls(ActionMapping mapping,
+          public ActionForward generarReporteDiario(ActionMapping mapping,
+                  ActionForm form,
+                  HttpServletRequest request,
+                  HttpServletResponse response) throws Exception {
+
+               String fecha = request.getParameter("fchInicial");
+               int inicio = Integer.parseInt(request.getParameter("start"));
+               int fin = Integer.parseInt(request.getParameter("limit"));
+
+               HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+               Writer out = responseWrapper.getWriter();
+               JSONObject jsonResponse = null;
+               SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+               try {
+                    Date dFecha = dateFormat.parse(fecha);
+                    Map mapaDatos = new ReportesDelegate().obtenerReporteDiario(inicio, fin, dFecha);
+                    jsonResponse = JSONObject.fromObject(mapaDatos);
+               } catch(SQLException ex) {
+                    ex.printStackTrace();
+               } catch(Exception ex) { ex.printStackTrace(); }
+               finally {
+                    out.write(jsonResponse.toString());
+                    out.close();
+               }
+
+               return null;
+          }
+
+          public ActionForward generarReportePeriodo(ActionMapping mapping,
+                  ActionForm form,
+                  HttpServletRequest request,
+                  HttpServletResponse response) throws Exception {
+
+               String fchInicial = request.getParameter("fchInicial");
+               String fchFinal = request.getParameter("fchFinal");
+               int inicio = Integer.parseInt(request.getParameter("start"));
+               int fin = Integer.parseInt(request.getParameter("limit"));
+
+               HttpServletResponseWrapper responseWrapper = new HttpServletResponseWrapper(response);
+               Writer out = responseWrapper.getWriter();
+               JSONObject jsonResponse = null;
+               SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+               try {
+                    Date fInicial = dateFormat.parse(fchInicial);
+                    Date fFinal = dateFormat.parse(fchFinal);
+                    Map mapaDatos = new ReportesDelegate().obtenerReportePeriodo(inicio, fin, fInicial, fFinal);
+                    jsonResponse = JSONObject.fromObject(mapaDatos);
+               } catch(SQLException ex) {
+                    ex.printStackTrace();
+               } catch(Exception ex) { ex.printStackTrace(); }
+               finally {
+                    out.write(jsonResponse.toString());
+                    out.close();
+               }
+
+               return null;
+          }
+
+          public ActionForward exportarReporteXls(ActionMapping mapping,
                   ActionForm form,
                   HttpServletRequest request,
                   HttpServletResponse response) throws Exception {
@@ -67,31 +126,77 @@ public class ReportesAction extends DispatchAction {
                String fechaInicial = request.getParameter("fechaInicial");
                String fechaFinal = request.getParameter("fechaFinal");
 
-               fechaInicial = fechaInicial.substring(4, fechaInicial.indexOf("2010") + 4);
-               fechaFinal = fechaFinal.substring(4, fechaFinal.indexOf("2010") + 4);
-               SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd yyyy");
-               try {
-                    Date fInicial = dateFormat.parse(fechaInicial);
-                    Date fFinal = dateFormat.parse(fechaFinal);
-                    Map map = new ReportesDelegate().obtenerReporteIndividual(0, 0, codigo, fInicial, fFinal);
-                    List<Reporte> registros = (List<Reporte>) map.get("registros");
-                    byte[] byteArray = new ReportesBuilder().generarRIXls(registros);
+               SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+               ReportesDelegate delegate = new ReportesDelegate();
+               byte[] byteArray = null;
 
-                    response.setHeader("Content-disposition", "inline; filename=reporteIndividual.xls");
-                    response.setHeader("Cache-control", "no-cache");
-                    response.setContentType("application/vnd.ms-excel");
-                    response.setContentLength(byteArray.length);
-                    ServletOutputStream outputStream = response.getOutputStream();
-                    outputStream.write(byteArray);
-                    outputStream.flush();
-                    outputStream.close();
-               } catch (SQLException e) {
-                    e.printStackTrace();
-               } catch (JRException e) {
-                    e.printStackTrace();
-               } catch (Exception e) {
-                    e.printStackTrace();
+               // Reporte Diario
+               if (codigo.equals("undefined") && fechaFinal.equals("undefined")) {
+                    try {
+                         Date fecha = dateFormat.parse(fechaInicial);
+
+                         Map map = delegate.obtenerReporteDiario(0, 0, fecha);
+                         List<Reporte> registros = (List<Reporte>) map.get("registros");
+                         byteArray = delegate.generarReporteXls(registros);
+
+                         response.setHeader("Content-disposition", "inline; filename=reporteDiario.xls");
+
+                    } catch (SQLException e) {
+                         e.printStackTrace();
+                    } catch (JRException e) {
+                         e.printStackTrace();
+                    } catch (Exception e) {
+                         e.printStackTrace();
+                    }
+
+                    // Reporte por Periodo
+               } else if (codigo.equals("undefined") && !fechaFinal.equals("undefined")) {
+                    try {
+                         Date fInicial = dateFormat.parse(fechaInicial);
+                         Date fFinal = dateFormat.parse(fechaFinal);
+
+                         Map map = delegate.obtenerReportePeriodo(0, 0, fInicial, fFinal);
+                         List<Reporte> registros = (List<Reporte>) map.get("registros");
+                         byteArray = delegate.generarReporteXls(registros);
+
+                         response.setHeader("Content-disposition", "inline; filename=reportePeriodo.xls");
+
+                    } catch (SQLException e) {
+                         e.printStackTrace();
+                    } catch (JRException e) {
+                         e.printStackTrace();
+                    } catch (Exception e) {
+                         e.printStackTrace();
+                    }
+
+                    // Reporte Individual
+               } else {
+                    try {
+                         Date fInicial = dateFormat.parse(fechaInicial);
+                         Date fFinal = dateFormat.parse(fechaFinal);
+
+                         Map map = delegate.obtenerReporteIndividual(0, 0, codigo, fInicial, fFinal);
+                         List<Reporte> registros = (List<Reporte>) map.get("registros");
+                         byteArray = delegate.generarReporteXls(registros);
+
+                         response.setHeader("Content-disposition", "inline; filename=reporteIndividual.xls");
+
+                    } catch (SQLException e) {
+                         e.printStackTrace();
+                    } catch (JRException e) {
+                         e.printStackTrace();
+                    } catch (Exception e) {
+                         e.printStackTrace();
+                    }
                }
+
+               response.setHeader("Cache-control", "no-cache");
+               response.setContentType("application/vnd.ms-excel");
+               response.setContentLength(byteArray.length);
+               ServletOutputStream outputStream = response.getOutputStream();
+               outputStream.write(byteArray);
+               outputStream.flush();
+               outputStream.close();
                
                return null;
           }

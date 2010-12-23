@@ -1,3 +1,6 @@
+/*
+ * Barra de navegación mostrada a usuarios con permisos administrativos
+ */
 Ext.onReady(function() {
      Ext.QuickTips.init();
 
@@ -6,12 +9,12 @@ Ext.onReady(function() {
           items: [{
                text: 'Registro de Asistencia',
                handler: function() {
-                    window.location = "/bio-checador/index.do";
+                    window.location = "/checador/index.do";
                }
           }, '-', {
                text: 'Reportes',
                handler: function() {
-                    window.location = "/bio-checador/admin/reportes.do";
+                    window.location = "/checador/admin/reportes.do";
                }
           }]
      });

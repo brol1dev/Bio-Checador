@@ -1,3 +1,9 @@
+/*
+ * Clase usada en el index o página inicial del sistema.
+ * Muestra un panel en el que se debe ingresar un código y
+ * una razón de la asistencia del empleado. Le sigue otra pantalla para
+ * confirmar los datos de esta persona y registrar la hora en la BD.
+ */
 Ext.onReady(function() {
      Ext.QuickTips.init();
 
@@ -21,6 +27,12 @@ Ext.onReady(function() {
           defaults: {
                width: 335
           },
+         /*
+               * El fieldset contiene los radio button con el status
+               * que se necesita registrar. Estos botones se llenan desde
+               * el servidor porque vienen de la base de datos.
+               * El plugin LiteRemoteComponent hace este proceso.
+               */
           items: [txtID, {
                xtype: 'fieldset',
                title: 'Razón de Registro',
@@ -32,7 +44,6 @@ Ext.onReady(function() {
                plugins: new Ext.ux.Plugin.LiteRemoteComponent({
                     url: 'status.do?method=obtenerStatusParaRadio'
                })
-               //items: [rbgRazones] // Se llenan los items desde el StatusAction.java
           }],
           buttonAlign: 'center',
           buttons: [{
@@ -51,6 +62,12 @@ Ext.onReady(function() {
                              codigo: codigo,
                              razon: status
                          },
+                         /* El resultado proviene en formato JSON.
+                                        * El objeto JSON con la información del empleado
+                                        * es usado para llenar los textfield del panel
+                                        * de confirmación de registro del empleado, por
+                                        * medio del metodo mostrarYLlenarRegistro
+                                        */
                          success: function(result, request) {
                               var jsonData = Ext.util.JSON.decode(result.responseText);
                               var empleado = jsonData.empleado;
@@ -68,21 +85,11 @@ Ext.onReady(function() {
                }
           }]
      });
-     pnlRegistro.render('panelCodigo');
+     pnlRegistro.render('panelCodigo'); // Se muestra en el div con #id 'panelCodigo'
 
-     /*var winRegistro = new Ext.Window({
-        layout:'fit',
-        width:420,
-        height:230,
-        closable: false,
-        resizable: false,
-        draggable: false,
-        plain: true,
-        border: false,
-        items: [pnlRegistro]
-     });
-     winRegistro.show();*/
-
+     /*
+     * Los textfield a continuación guardan los datos del empleado a registrar
+     */
      var txtNombre = new Ext.form.TextField({
           fieldLabel: 'Nombre',
           name: 'nombre',
@@ -134,6 +141,12 @@ Ext.onReady(function() {
           autoCreate: {tag: 'textarea', maxlength: '200'}
      });
 
+      /*
+          * Este botón esta en el panel de confirmación de registro.
+          * Manda al servidor el id del empleado, id de status y el comentario
+          * para registrar la hora y regresa un mensaje mostrando la fecha
+          * y hora del registro.
+          */
      var btnRegistrar = new Ext.Button({
           text: 'Registrar Hora',
           width: 100,
@@ -150,6 +163,13 @@ Ext.onReady(function() {
                     success: function(result, request) {
                          var jsonData = Ext.util.JSON.decode(result.responseText);
                          if (jsonData.error == null) {
+                            /*
+                                             * Cuando el registro es exitoso muestra
+                                             * un mensaje con la fecha y hora del registro.
+                                             * Este desaparece automáticamente después de
+                                             * 5 segundos y regresa al panel de registro de
+                                             * código del empleado.
+                                             */
                               var respuesta = jsonData.respuesta;
                               setTimeout(function() {
                                    msgExito.hide();
@@ -171,6 +191,9 @@ Ext.onReady(function() {
           }
      });
 
+     /*
+      * Contiene todos los datos del empleado para registrar su hora
+      */
      var pnlInformacion = new Ext.Panel({
           title: 'Datos del Empleado',
           layout: 'form',
@@ -197,10 +220,14 @@ Ext.onReady(function() {
      });
      pnlInformacion.render('panel');
 
+     /*
+      * Esconde el panel de ingreso de código, muestra el panel de información
+      * del empleado y llena los textfield del último panel con los datos
+      * del empleado que se desea registrar.
+      */
      function mostrarYLlenarRegistro(empleado) {
           pnlRegistro.hide();
           pnlInformacion.setTitle("Registro de " + empleado.status);
-          pnlInformacion.show();
           txtNombre.setValue(empleado.nombre);
           txtNumEmpleado.setValue(empleado.numero);
           txtRfc.setValue(empleado.rfc);
@@ -208,8 +235,13 @@ Ext.onReady(function() {
           txtArea.setValue(empleado.area);
           txtIdEmpleado.setValue(empleado.id);
           txtStatus.setValue(empleado.idStatus);
+          pnlInformacion.show();
      }
 
+     /*
+      * Esconde el panel de información y muestra el panel de ingreso
+      * de código reseteando el textfield de código.
+      */
      function mostrarPanelCodigo() {
           pnlInformacion.hide();
           pnlRegistro.show();
@@ -217,11 +249,28 @@ Ext.onReady(function() {
           txaComentario.reset();
      }
 
+     /*
+      * Esconde el panel de información y muestra el panel de ingreso
+      * de código sin resetear el textfield de código.
+      */
      function mostrarPanelCodigoSinReset() {
           pnlInformacion.hide();
           pnlRegistro.show();
           txaComentario.reset();
      }
+
+     /*var winRegistro = new Ext.Window({
+        layout:'fit',
+        width:420,
+        height:230,
+        closable: false,
+        resizable: false,
+        draggable: false,
+        plain: true,
+        border: false,
+        items: [pnlRegistro]
+     });
+     winRegistro.show();*/
 
       /*var strStatus = new Ext.data.JsonStore({
           url: 'status.do?method=obtenerStatus',

@@ -18,10 +18,12 @@ import net.sf.jasperreports.engine.export.JRXlsExporter;
  */
 public class ReportesBuilder {
 
-     public byte[] generarRIXls(List<Reporte> registros) throws JRException {
+     public byte[] generarReporteXls(List<Reporte> registros) throws JRException {
           String path = new getPath<ReportesBuilder>(ReportesBuilder.class).ver();
-          String fileName = path + File.separator + "reporteIndividual.jasper";
+          String fileName = path + File.separator + "reporteExcel.jasper";
 
+          registros.add(0, null); // La posición 0 en la lista nunca se imprime en el reporte.
+          
           JasperPrint print = JasperFillManager.fillReport(fileName, null, new JRBeanCollectionDataSource(registros));
 
           ByteArrayOutputStream byteArray = new ByteArrayOutputStream();

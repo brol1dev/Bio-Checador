@@ -7,16 +7,16 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="/bio-checador/css/estilo-login.css" />
+    <link rel="stylesheet" type="text/css" href="/checador/css/estilo-login.css" />
 
-    <title>Bio-Checador Login</title>     
+    <title>Checador Login</title>     
   </head>
 
   <body>
     <div id="stylized" class="myform">
       <form id="form" name="form" method="POST" action="j_spring_security_check">
       <h1>Ingreso al Sistema</h1>
-      <p>Conocer | Bio-Checador</p>
+      <p>Conocer | Checador</p>
 
       <label for="j_username">Usuario:</label>
       <input type="text" name="j_username" id="j_username" <c:if test="${not empty param.login_error}">value="<%= session.getAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY) %>"</c:if> />

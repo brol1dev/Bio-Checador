@@ -6,67 +6,67 @@
         Estilo para login del sistema del bio-checador
 */
 body{
-font-family:"Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, Helvetica, sans-serif;
+font-family:tahoma, arial, helvetica, sans-serif;
 font-size:12px;
+color: #000000;
 }
 p, h1, form, button{border:0; margin:0; padding:0;}
 .spacer{clear:both; height:1px;}
 /* ----------- My Form ----------- */
 .myform{
 margin:0 auto;
-width:400px;
+width:360px;
 padding:14px;
 }
 
 /* ----------- stylized ----------- */
 #stylized{
-border:solid 2px #dddddd;
-background:#eeeeee;
+border:solid 1px #dddddd;
+background:#f1f1f1;
 }
 #stylized h1 {
 font-size:14px;
 font-weight:bold;
-margin-bottom:8px;
+margin-bottom:4px;
+color: #333333;
 }
 #stylized p{
 font-size:11px;
-color:#666666;
-margin-bottom:20px;
-border-bottom:solid 1px #dddccc;
+color:#777777;
+margin-bottom:15px;
+border-bottom:solid 1px #cccccc;
 padding-bottom:10px;
 }
 #stylized label{
 display:block;
-font-weight:bold;
 text-align:right;
-width:140px;
+line-height: 24px;
+width:100px;
 float:left;
-}
-#stylized .small{
-color:#666666;
-display:block;
-font-size:11px;
-font-weight:normal;
-text-align:right;
-width:140px;
 }
 #stylized input{
 float:left;
 font-size:12px;
-padding:4px 2px;
-border:solid 1px #aacfe4;
+padding:2px 3px;
+border:solid 1px #c1c1c1;
 width:200px;
 margin:2px 0 20px 10px;
 }
+#stylized input:focus {
+border:solid 1px #777777;
+}
 #stylized button{
-clear:both;
-margin: 0 0 10px 150px;
-width:125px;
-height:31px;
-background:#110099 no-repeat;
+clear: both;
+position: relative;
+left: 45px;
+margin: 0 15px;
+width:100px;
+height:22px;
+background-image:url('btn.gif');
+background-position: 0px -1096px;
+background-repeat: repeat-x;
+border: solid 1px #aaaaaa;
 text-align:center;
-line-height:31px;
-color:#FFFFFF;
+color:#333333;
 font-size:11px;
-font-weight:bold;
 }

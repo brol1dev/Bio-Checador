@@ -11,9 +11,10 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="/bio-checador/js/admin_nav.js"></script>
+        <script type="text/javascript" src="/checador/js/admin_nav.js"></script>
     </head>
     <body>
+         <!-- En este div se muestra la barra de navegación para administradores -->
          <div id="admin_nav" class="codigo"></div>
     </body>
 </html>

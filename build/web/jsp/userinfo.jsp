@@ -16,7 +16,8 @@
              <div id="footer-frame">
                   <div id="footer-content">
                        <p>
-                            Usuario: <sec:authentication property="principal.username" /> | <a href="/bio-checador/j_spring_security_logout">Cerrar Sesión</a>
+                            <!-- Imprime el nombre del usuario que se autenticó -->
+                            Bienvenido <sec:authentication property="principal.username" /> | <a href="/checador/j_spring_security_logout">Cerrar Sesión</a>
                        </p>
                   </div>
              </div>

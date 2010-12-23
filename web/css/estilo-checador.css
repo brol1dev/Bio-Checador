@@ -5,11 +5,13 @@
     Description:
         Estilos personalizados para aplicación del checador
 */
- 
+
+/* Agrupar el cuerpo de la página en un div con este id */
 #body-content {
 padding: 10px 10px 30px 10px;
 }
 
+/* Agrupar el pie de página en un div con este id */
 #footer {
     position: fixed;
     background-color: #FFF;
@@ -21,12 +23,14 @@ padding: 10px 10px 30px 10px;
     z-index: 1000;
 }
 
+/* Dentro del footer se mete este frame para darle un mejor margen */
 #footer-frame {
      height: 20px;
      margin: 0px 10px 0px 10px;
      position: relative;
 }
 
+/* Otro div dentro de footer-frame que solo da un poco de relleno a la parte de arriba */
 #footer-content {
      padding: 3px 0px 0px 0px;
 }
@@ -49,26 +53,23 @@ padding: 10px 10px 30px 10px;
      margin: 0px auto 0px;
 }
 
-#panelCodigo {
+/* Tamaño para la página inicial del sistema */
+#panelCodigo, .codigo {
      width: 410px;
      margin: 0px auto 0px;
 }
 
-.codigo {
-     width: 410px;
-     margin: 0px auto 5px;
-}
+.codigo { margin: 0px auto 5px; }
 
-#panelReportes {
+/* Tamaño para la página de reportes */
+#panelReportes, .reportes {
      width: 800px;
      margin: 0px auto 0px;
 }
 
-.reportes {
-     width: 800px;
-     margin: 0px auto 5px;
-}
+.reportes { margin: 0px auto 5px; }
 
+/* Color de texto para textfields deshabilitados */
 .disabled-txt {
     color: #000;
 }
